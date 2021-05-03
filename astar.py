@@ -92,6 +92,26 @@ class Spot:
 		else:
 			self.neighbors.append(-1)
 
+		if self.row > 0 and self.col > 0 and not grid[self.row - 1][self.col - 1].is_barrier(): # LEFT-UP
+			self.neighbors.append(grid[self.row - 1][self.col - 1])
+		else:
+			self.neighbors.append(-1)
+
+		if self.row > 0 and self.col < self.total_rows - 1 and not grid[self.row - 1][self.col + 1].is_barrier(): # RIGHT-UP
+			self.neighbors.append(grid[self.row - 1][self.col + 1])
+		else:
+			self.neighbors.append(-1)
+
+		if self.row < self.total_rows - 1 and self.col > 0 and not grid[self.row + 1][self.col - 1].is_barrier(): # LEFT-DOWN
+			self.neighbors.append(grid[self.row + 1][self.col - 1])
+		else:
+			self.neighbors.append(-1)
+
+		if self.row < self.total_rows - 1 and self.col < self.total_rows - 1 and not grid[self.row + 1][self.col + 1].is_barrier(): # RIGHT-DOWN
+			self.neighbors.append(grid[self.row + 1][self.col + 1])
+		else:
+			self.neighbors.append(-1)
+
 	def __lt__(self, other):
 		return False
 
@@ -134,11 +154,16 @@ def algorithm(draw, grid, start, end):
 			end.make_end()
 			return True
 
+		c = 0
 		for neighbor in current.neighbors:
+			c += 1
 			if neighbor == -1:
 				continue
-			
-			temp_g_score = g_score[current] + 1
+			if c<4:
+				temp_g_score = g_score[current] + 1
+			else:
+				temp_g_score = g_score[current] + math.sqrt(2)
+			print(temp_g_score)
 
 			if temp_g_score < g_score[neighbor]:
 				came_from[neighbor] = current
